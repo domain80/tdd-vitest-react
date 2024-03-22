@@ -5,7 +5,7 @@ export interface IInterestParams {
   time: number;
 }
 
-export function getCompoundInterest(props: IInterestParams) {
+export function compoundInterest(props: IInterestParams) {
   const principal = props?.principal ?? 0;
   const ratePerAnnum = props?.ratePerAnnum ?? 0;
   const compoundingFreq = props?.compoundingFreq ?? 0;

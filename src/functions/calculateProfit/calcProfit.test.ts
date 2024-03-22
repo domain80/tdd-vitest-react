@@ -1,7 +1,7 @@
 /* 
  { task: "Create a function that calculates the profit from a sale, given the cost price, selling price, and quantity sold.", function: "calculateProfit" }
 */
-import { IProfitParam, getProfit } from "./calcProfit";
+import { IProfitParam, calculateProfit } from "./calcProfit";
 
 describe("Calculate profit", () => {
   test("given a cost price, selling price and quantity sold, it should return the profit made from the sale", () => {
@@ -11,7 +11,7 @@ describe("Calculate profit", () => {
       quantitySold: 4,
     };
 
-    const actual = getProfit(params);
+    const actual = calculateProfit(params);
     const expected = 8;
 
     expect(actual).toEqual(expected);
@@ -20,7 +20,7 @@ describe("Calculate profit", () => {
   test("given an undefined params, it should return 0", () => {
     const params = {} as IProfitParam;
 
-    const actual = getProfit(params);
+    const actual = calculateProfit(params);
     const expected = 0;
 
     expect(actual).toEqual(expected);
@@ -33,7 +33,7 @@ describe("Calculate profit", () => {
       quantitySold: 3,
     };
 
-    const actual = getProfit(params);
+    const actual = calculateProfit(params);
     const expected = 0;
 
     expect(actual).toEqual(expected);
@@ -46,7 +46,7 @@ describe("Calculate profit", () => {
       quantitySold: 0,
     };
 
-    const actual = getProfit(params);
+    const actual = calculateProfit(params);
     const expected = 0;
 
     expect(actual).toEqual(expected);
@@ -59,7 +59,7 @@ describe("Calculate profit", () => {
       quantitySold: 4,
     };
 
-    const actual = getProfit(params);
+    const actual = calculateProfit(params);
     const expected = -40;
 
     expect(actual).toEqual(expected);
@@ -72,7 +72,7 @@ describe("Calculate profit", () => {
       quantitySold: 4,
     };
 
-    const actual = getProfit(params);
+    const actual = calculateProfit(params);
     const expected = 48;
 
     expect(actual).toEqual(expected);
