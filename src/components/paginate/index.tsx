@@ -16,7 +16,8 @@ function Paginate({ limit = 0, total = 0, defaultPage = 1, onPageChange }: IPagi
   const pageCount = Math.ceil(total / limit);
 
   function pageChange(val: number) {
-    const nextPage = currentPage + val;
+    const nextPage =
+      currentPage + val > pageCount ? currentPage : currentPage + val < 1 ? currentPage : currentPage + val;
     setCurrentPage(nextPage);
     onPageChange ? onPageChange(nextPage) : null;
   }
@@ -28,11 +29,10 @@ function Paginate({ limit = 0, total = 0, defaultPage = 1, onPageChange }: IPagi
         <div className="flex items-center ">
           <Button
             variant={"ghost"}
-            title="next"
-            onClick={() => pageChange(+1)}
-            className="flex items-center gap-2">
+            onClick={() => pageChange(-1)}
+            title="prev">
             <ChevronLeft />
-            <span>Next</span>
+            <span>Previous</span>
           </Button>
 
           <div className="mx-4 flex items-center gap-2">
@@ -56,12 +56,12 @@ function Paginate({ limit = 0, total = 0, defaultPage = 1, onPageChange }: IPagi
                 );
             })}
           </div>
-
           <Button
             variant={"ghost"}
-            onClick={() => pageChange(-1)}
-            title="prev">
-            <span>Previous</span>
+            title="next"
+            onClick={() => pageChange(+1)}
+            className="flex items-center gap-2">
+            <span>Next</span>
             <ChevronRight />
           </Button>
         </div>

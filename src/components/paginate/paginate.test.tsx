@@ -294,4 +294,44 @@ describe("Pagination", () => {
     await user.click(prev);
     expect(callback).toHaveBeenCalledWith(1);
   });
+
+  it("does not exceed the current number of pages when next is pressed", async () => {
+    const user = userEvent.setup();
+
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={6}
+      />,
+    );
+
+    const next = screen.getByTitle(/next/i);
+    await user.click(next);
+    expect(screen.getByText(6)).toHaveAttribute("data-currentPage", "true");
+  });
+
+  it("does not exceed the current number of pages when prev is pressed", async () => {
+    const user = userEvent.setup();
+
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={1}
+      />,
+    );
+
+    const prev = screen.getByTitle(/prev/i);
+    await user.click(prev);
+    expect(screen.getByText(1)).toHaveAttribute("data-currentPage", "true");
+  });
 });
