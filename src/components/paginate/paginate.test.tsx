@@ -70,7 +70,6 @@ describe("Pagination", () => {
 
   it("renders page numbers in each button", () => {
     const expected = ["1", "2", "3", "4"];
-    screen.debug();
 
     const total = 20;
     const limit = 5;
@@ -130,8 +129,6 @@ describe("Pagination", () => {
     expect(callback).toBeCalledWith(2);
     await user.click(buttons[2]);
     expect(callback).toBeCalledWith(3);
-    await user.click(buttons[3]);
-    expect(callback).toBeCalledWith(4);
   });
 
   it("sets the data-currentPage of the first button to true by default", () => {
@@ -145,8 +142,6 @@ describe("Pagination", () => {
         onPageChange={callback}
       />,
     );
-
-    // screen.debug();
 
     const firstBtn = screen.queryByText(/1/i);
     expect(firstBtn).toHaveAttribute("data-currentPage", "true");
@@ -169,5 +164,134 @@ describe("Pagination", () => {
     const btn = screen.getByText(/3/i);
     await user.click(btn);
     expect(btn).toHaveAttribute("data-currentPage", "true");
+  });
+
+  it("renders only 3 page selectors at a time", () => {
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+      />,
+    );
+
+    const btns = screen.getAllByTitle("page");
+    expect(btns).toHaveLength(3);
+  });
+
+  it("renders only 3 page selectors at a time given the current page is the last one", () => {
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={6}
+      />,
+    );
+
+    const btns = screen.getAllByTitle("page");
+    expect(btns).toHaveLength(3);
+  });
+  it("renders only 3 page selectors at a time given the current page is not the first one", () => {
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={3}
+      />,
+    );
+
+    const btns = screen.getAllByTitle("page");
+    expect(btns).toHaveLength(3);
+  });
+
+  it("goes to the next page when the next button is clicked", async () => {
+    const user = userEvent.setup();
+
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={2}
+      />,
+    );
+
+    const next = screen.getByTitle("next");
+    await user.click(next);
+    expect(screen.getByText(3)).toHaveAttribute("data-currentPage", "true");
+  });
+
+  it("goes to the previous page when the next button is clicked", async () => {
+    const user = userEvent.setup();
+
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={2}
+      />,
+    );
+
+    const next = screen.getByTitle(/prev/i);
+    await user.click(next);
+    expect(screen.getByText(1)).toHaveAttribute("data-currentPage", "true");
+  });
+
+  it("calls the pageChangeHandler when the next button is clicked", async () => {
+    const user = userEvent.setup();
+
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={2}
+      />,
+    );
+
+    const next = screen.getByTitle("next");
+    await user.click(next);
+    expect(callback).toHaveBeenCalledWith(3);
+  });
+
+  it("calls the pageChangeHandler when the prev button is clicked", async () => {
+    const user = userEvent.setup();
+
+    const total = 28;
+    const limit = 5;
+    const callback = vi.fn();
+    render(
+      <Paginate
+        total={total}
+        limit={limit}
+        onPageChange={callback}
+        defaultPage={2}
+      />,
+    );
+
+    const prev = screen.getByTitle(/prev/i);
+    await user.click(prev);
+    expect(callback).toHaveBeenCalledWith(1);
   });
 });

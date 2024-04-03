@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import react, { reactnode, useState, usestate } from "react";
 import classNames from "classnames";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
@@ -16,6 +16,12 @@ function Paginate({ limit = 0, total = 0, defaultPage = 1, onPageChange }: IPagi
 
   const pageCount = Math.ceil(total / limit);
 
+  function pageChange(val: number) {
+    const nextPage = currentPage + val;
+    setCurrentPage(nextPage);
+    onPageChange ? onPageChange(nextPage) : null;
+  }
+
   if (total > 0 && limit > 0) {
     return (
       <div>
@@ -24,31 +30,37 @@ function Paginate({ limit = 0, total = 0, defaultPage = 1, onPageChange }: IPagi
           <Button
             variant={"ghost"}
             title="next"
+            onClick={() => pageChange(+1)}
             className="flex items-center gap-2">
             <ChevronLeft />
             <span>Next</span>
           </Button>
 
           <div className="mx-4 flex items-center gap-2">
-            {Array.from({ length: pageCount }).map((_, i) => {
-              return (
-                <Button
-                  variant={currentPage == i + 1 ? "outline" : "ghost"}
-                  data-currentPage={currentPage == i + 1}
-                  title="page"
-                  key={i}
-                  onClick={() => {
-                    onPageChange ? onPageChange(i + 1) : null;
-                    setCurrentPage(i + 1);
-                  }}>
-                  {i + 1}
-                </Button>
-              );
+            {Array.from({ length: pageCount }, (_, i) => {
+              if (
+                (currentPage == 1 && i + 1 < currentPage + 3) ||
+                (currentPage > 1 && currentPage == i + 1) ||
+                i + 1 == currentPage - 1 ||
+                i + 1 == currentPage + 1 ||
+                (currentPage == pageCount && i + 1 == pageCount - 2)
+              )
+                return (
+                  <Button
+                    variant={currentPage == i + 1 ? "outline" : "ghost"}
+                    data-currentPage={currentPage == i + 1}
+                    title="page"
+                    key={i}
+                    onClick={() => pageChange(i + 1 - currentPage)}>
+                    {i + 1}
+                  </Button>
+                );
             })}
           </div>
 
           <Button
             variant={"ghost"}
+            onClick={() => pageChange(-1)}
             title="prev">
             <span>Previous</span>
             <ChevronRight />
